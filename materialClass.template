@@ -1,0 +1,12 @@
+package custom.hni.materials;
+
+use cm.basic, cm.core, cm.core3D;
+
+public class SMHMBEM10 extends GMaterial3D {
+  public constructor() {
+    super();
+    diffuseTextureUrl = cmFindUrl("{textureUrl}");
+    diffuseVScale = Float({vScale});
+    diffuseUScale = Float({hScale});
+  }
+}

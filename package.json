@@ -1,0 +1,16 @@
+{
+  "name": "cmmd",
+  "version": "1.0.0",
+  "description": "CM Material Downloader",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "mbr4nt",
+  "license": "ISC",
+  "dependencies": {
+    "gm": "^1.21.1",
+    "interpolate": "^0.1.0",
+    "request": "^2.69.0"
+  }
+}
