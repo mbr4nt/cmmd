@@ -21,8 +21,10 @@ module.exports = function(code, outputFolder, callback) {
     materialInfo.code = code;
     materialInfo.outputFolder = outputFolder;
     if(scene7) {
+      materialInfo.materialType = "texture";
       extractResolution(materialInfo, callback);
     } else {
+      materialInfo.materialType = "color";
       writeJSON(materialInfo, callback);
     }
   });
@@ -59,6 +61,7 @@ function writeJSON(materialInfo, done) {
 
 
   var outputInfo = {
+    materialType: materialInfo.materialType,
     textureUrl: materialInfo.textureUrl,
     vScale: materialInfo.vScale,
     hScale: materialInfo.hScale,
