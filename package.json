@@ -9,9 +9,11 @@
   "author": "mbr4nt",
   "license": "ISC",
   "dependencies": {
+    "async": "^1.5.2",
     "gm": "^1.21.1",
     "interpolate": "^0.1.0",
-    "request": "^2.69.0"
+    "request": "^2.69.0",
+    "underscore": "^1.8.3"
   },
   "devDependencies": {},
   "repository": {
