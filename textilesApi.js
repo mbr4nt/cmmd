@@ -12,7 +12,7 @@ module.exports = new(function(req, interpolate, _) {
     };
 
     this.getCount = function(input, callback) {
-        input(0, 0, function(err, results) {
+        input(0, 1, function(err, results) {
             if (err) {
                 return callback(err);
             }

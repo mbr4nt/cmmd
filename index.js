@@ -20,7 +20,7 @@ module.exports = function(code, outputFolder, callback) {
     })
   ];
 
-  async.map(urls, get, function(err, objects, callback) {
+  async.map(urls, get, function(err, objects) {
     var scene7 = objects[0];
     var rgb = objects[1];
     var materialInfo = scene7 ? scene7 : {
@@ -91,6 +91,7 @@ function addScale(materialInfo, callback) {
   var outputUrl = interpolate("{outputFolder}/{textureUrl}", materialInfo);
   // obtain the size of an image
   gm(outputUrl).size(function(err, size) {
+    if(err) return callback(err);
     materialInfo.vScale = getScale(size.height);
     materialInfo.hScale = getScale(size.width);
     writeJSON(materialInfo, callback);

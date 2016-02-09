@@ -22,7 +22,6 @@ module.exports = new(function(api, async, _) {
             if (err) {
                 return callback(err);
             }
-
             api.getAllCodes(input, 0, count, function(err, results) {
                 if (err) {
                     return callback(err);
