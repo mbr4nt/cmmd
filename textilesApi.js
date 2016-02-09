@@ -1,18 +1,18 @@
 module.exports = new(function(req, interpolate, _) {
     var tfApiUrl = "http://esapi.azurewebsites.net/",
-        colorsUrl = "allsteel/fabricColor/search?k=&skip={skip}&take{take}",
+        colorsUrl = "allsteel/fabricColor/search?k=&skip={skip}&take={take}",
         self = this;
 
     this.getAllFabrics = function(skip, take, callback) {
         //defaults
         skip = skip || 0;
         take = take || 100;
-
+        
         var url = tfApiUrl + interpolate(colorsUrl, {
             skip: skip,
-            take: take
+            take: 10
         });
-
+        
         req(url, function(err, res) {
             if (err) {
                 return callback(err);
@@ -22,13 +22,23 @@ module.exports = new(function(req, interpolate, _) {
             callback(null, results);
         });
     };
+    
+    this.getCount = function(input, callback) {
+        input(0,0, function(err, results){
+           if(err) {
+               return callback(err);
+           }
+           
+           callback(null, results.matchCount);
+        });
+    };
 
     this.getAllCodes = function(input, skip, take, callback) {
         input(skip, take, function(err, results) {
             if (err) {
                 return callback(err);
             }
-
+            
             results = _.map(results.items, function(item) {
                 return item.code;
             });

@@ -1,25 +1,16 @@
-var esapi = require("./textilesApi.js"),
-    async = require("async");
+var fabrics = require("./processTextiles.js"),
+    downloadMaterial = require("./index.js");
 
-var queue = async.queue(function(item, callback) {
-    //YOUR FUNCTION GOES HERE
-    setTimeout(function(){
-        console.log(item);
-        callback();
-    }, 100);
-}, 10);
-
-queue.drain = function() {
-    console.log("All Done");
-};
-
-esapi.getAllCodes(esapi.getAllFabrics, 0, 10, function(err, results) {
-    if(err) {
+fabrics.processAllFabrics(function(code, callback) {
+    console.log(code);
+    downloadMaterial(code, "./output", function(err) {
+        callback(err);
+    });
+}, function(err) {
+    if (err) {
         console.log(err);
         return;
     }
-    
-    results.forEach(function(item) {
-        queue.push(item);
-    });
+
+    console.log("All done");
 });
