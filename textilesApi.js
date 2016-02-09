@@ -1,7 +1,7 @@
 module.exports = new(function(req, interpolate, _) {
     var tfApiUrl = "http://esapi.azurewebsites.net/",
         fabricsUrl = "allsteel/fabricColor/search?k=&skip={skip}&take={take}",
-        finishesUrl = "allsteel/fabricColor/search?k=&skip={skip}&take={take}";
+        finishesUrl = "allsteel/finishColor/search?k=&skip={skip}&take={take}";
 
     this.getAllFinishes = function(skip, take, callback) {
         _getAll(finishesUrl, skip, take, callback);
@@ -42,7 +42,7 @@ module.exports = new(function(req, interpolate, _) {
 
         var url = tfApiUrl + interpolate(partUrl, {
             skip: skip,
-            take: 10
+            take: take
         });
 
         req(url, function(err, res) {

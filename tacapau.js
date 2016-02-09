@@ -2,7 +2,6 @@ var fabrics = require("./processTextiles.js"),
     downloadMaterial = require("./index.js");
 
 fabrics.processAllFabrics(function(code, callback) {
-    console.log(code);
     downloadMaterial(code, "./output", function(err) {
         callback(err);
     });

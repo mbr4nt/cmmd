@@ -2,6 +2,14 @@ module.exports = new(function(api, async, _) {
     var _maxParallel = 10;
 
     this.processAllFabrics = function(iterator, callback) {
+        processAll(api.getAllFabrics, iterator, callback);
+    };
+
+    this.processAllFinishes = function(iterator, callback) {
+        processAll(api.getAllFinishes, iterator, callback);
+    };
+
+    function processAll(input, iterator, callback) {
         var queue = async.queue(function(item, itemCallback) {
             iterator(item, itemCallback);
         }, _maxParallel);
@@ -10,12 +18,12 @@ module.exports = new(function(api, async, _) {
             callback();
         };
 
-        api.getCount(api.getAllFabrics, function(err, count) {
+        api.getCount(input, function(err, count) {
             if (err) {
                 return callback(err);
             }
 
-            api.getAllCodes(api.getAllFabrics, 0, count, function(err, results) {
+            api.getAllCodes(input, 0, count, function(err, results) {
                 if (err) {
                     return callback(err);
                 }
@@ -25,5 +33,5 @@ module.exports = new(function(api, async, _) {
                 });
             });
         });
-    };
+    }
 })(require("./textilesApi.js"), require("async"), require("underscore"));
