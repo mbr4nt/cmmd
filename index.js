@@ -1,16 +1,37 @@
-var materialApiUrl = "http://esapi.azurewebsites.net/allsteel/details/{code}/scene7";
+var materialApiUrl = "http://esapi.azurewebsites.net/allsteel/details";
+var materialApiScene7Url = "{materialApiUrl}/{code}/scene7";
+var materialApiRgbUrl = "{materialApiUrl}/{code}/rgb";
+var async = require("async");
 var fs = require("fs");
 var req = require("request");
 var interpolate = require("interpolate");
 var gm = require('gm');
 const desiredResolution = 26;
 
-module.exports = function(code, callback) {
-  var url = interpolate(materialApiUrl, { code: code});
-  req(url, function(err, res) {
-    var materialInfo = JSON.parse(res.body);
+module.exports = function(code, outputFolder, callback) {
+  var urls =  [
+    interpolate(materialApiScene7Url, { code: code, materialApiUrl: materialApiUrl}),
+    interpolate(materialApiRgbUrl, { code: code, materialApiUrl: materialApiUrl})
+  ];
+
+  async.map(urls, get, function(err, objects, callback) {
+    var scene7 = objects[0];
+    var rgb = objects[1];
+    var materialInfo = scene7 ? scene7 : { rgb: rgb };
     materialInfo.code = code;
-    extractResolution(materialInfo, callback);
+    materialInfo.outputFolder = outputFolder;
+    if(scene7) {
+      extractResolution(materialInfo, callback);
+    } else {
+      writeJSON(materialInfo, callback);
+    }
+  });
+};
+
+function get(url, callback) {
+  req(url, function(err, res) {
+    var o = res.body ? JSON.parse(res.body) : null;
+    callback(null, o);
   });
 }
 
@@ -27,26 +48,36 @@ function downloadJpg(materialInfo, callback) {
     asset: asset,
     scale: scale
   });
-  materialInfo.textureUrl = __dirname + interpolate("\\{code}.jpg", materialInfo);
-  req(url).pipe(fs.createWriteStream(materialInfo.textureUrl)).on('close', function(err) {
-    writeCMClass(materialInfo, callback);
+  materialInfo.textureUrl = interpolate("{code}.jpg", materialInfo);
+  var outputUrl = interpolate("{outputFolder}/{textureUrl}", materialInfo);
+  req(url).pipe(fs.createWriteStream(outputUrl)).on('close', function(err) {
+    addScale(materialInfo, callback);
   });
 }
 
-function writeCMClass(materialInfo, callback) {
+function writeJSON(materialInfo, done) {
 
+
+  var outputInfo = {
+    textureUrl: materialInfo.textureUrl,
+    vScale: materialInfo.vScale,
+    hScale: materialInfo.hScale,
+    rgb: materialInfo.rgb
+  };
+
+  fs.writeFile(
+    materialInfo.outputFolder + "/" + materialInfo.code + ".json",
+    JSON.stringify(outputInfo, null, 4),
+    done);
+}
+
+function addScale(materialInfo, callback) {
+  var outputUrl = interpolate("{outputFolder}/{textureUrl}", materialInfo);
   // obtain the size of an image
-  gm(materialInfo.textureUrl).size(function (err, size) {
-    console.dir(err);
+  gm(outputUrl).size(function (err, size) {
     materialInfo.vScale = getScale(size.height);
     materialInfo.hScale = getScale(size.width);
-    fs.readFile("./materialClass.template", "utf-8", function(err, content) {
-      content = interpolate(content, materialInfo);
-      console.dir(materialInfo);
-      fs.writeFile(materialInfo.code + ".cm", content, function(err) {
-        callback();
-      });
-    });
+    writeJSON(materialInfo, callback);
   });
 }
 

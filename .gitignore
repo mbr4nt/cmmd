@@ -1,3 +1,4 @@
 *.cm
 *.jpg
 node_modules
+output
