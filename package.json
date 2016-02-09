@@ -12,5 +12,18 @@
     "gm": "^1.21.1",
     "interpolate": "^0.1.0",
     "request": "^2.69.0"
-  }
+  },
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mbr4nt/cmmd.git"
+  },
+  "keywords": [
+    "cm",
+    "material"
+  ],
+  "bugs": {
+    "url": "https://github.com/mbr4nt/cmmd/issues"
+  },
+  "homepage": "https://github.com/mbr4nt/cmmd#readme"
 }

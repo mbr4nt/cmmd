@@ -1,4 +1,4 @@
 var downloadMaterial = require("./index.js");
-downloadMaterial("SMHMBEM10", function(){
+downloadMaterial("SMHMFID04", function(){
   console.dir("bao");
 });
